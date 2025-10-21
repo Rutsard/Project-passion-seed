@@ -71,18 +71,15 @@
       width: 60px;
       height: 60px;
       border-radius: 8px;
-      object-fit: cover;
-    }
-
-    .competition span {
-      display: block;
-    }
-
-    .hovered {
+      object    .hovered {
       stroke: #e74c3c !important;
-      stroke-width: 2px;
-      filter: drop-shadow(0 4px 8px rgba(231, 76, 60, 0.3));
-      transform: translateY(-2px);
+      stroke-width: 3px !important;
+      fill: #ffe6e6 !important;
+      filter: drop-shadow(0 6px 12px rgba(231, 76, 60, 0.4));
+      transform: translateY(-3px);
+      transition: all 0.3s ease;
+      cursor: pointer;
+    }orm: translateY(-2px);
       transition: all 0.2s ease;
       cursor: pointer;
     }
@@ -170,12 +167,19 @@
 
     .close-btn:hover {
       background: #e74c3c;
-      color: white;
-      transform: rotate(90deg);
+      colo    .no-competitions {
+      text-align: center;
+      padding: 3rem 2rem;
+      color: #888;
+      background: #f9f9f9;
+      border-radius: 12px;
+      margin: 1rem 0;
     }
 
-    .modal-content {
-      padding: 1.5rem;
+    .no-competitions p {
+      font-size: 1.1rem;
+      margin: 0;
+    }em;
       overflow-y: auto;
       max-height: calc(80vh - 80px);
     }
@@ -215,18 +219,44 @@
     const tooltip = document.getElementById("province-tooltip");
     const modal = document.getElementById("competition-modal");
     const modalOverlay = document.getElementById("modal-overlay");
-    const modalProvinceName = document.getElementById("modal-province-name");
-    const modalCompetitionList = document.getElementById("modal-competition-list");
-    const closeBtn = document.querySelector(".close-btn");
-    const mapObject = document.getElementById("thailand-map");
-
-    const competitionsData = {
+    const modalProvinceName = document.getElementById("modal-provinc    const competitionsData = {
       "Bangkok": [
         { name: "Bangkok Marathon", date: "10 ธ.ค. 2025", img: "https://picsum.photos/100?1" },
         { name: "Esports Tournament", date: "20 ธ.ค. 2025", img: "https://picsum.photos/100?2" }
       ],
       "ChiangMai": [
         { name: "Chiang Mai Half Marathon", date: "5 ม.ค. 2026", img: "https://picsum.photos/100?3" },
+        { name: "Lan Na Fest", date: "12 ม.ค. 2026", img: "https://picsum.photos/100?4" }
+      ],
+      "ChiangRai": [
+        { name: "งานวิ่งเชียงราย", date: "15 ม.ค. 2026", img: "https://picsum.photos/100?5" }
+      ],
+      "Phuket": [
+        { name: "Phuket Triathlon", date: "20 ก.พ. 2026", img: "https://picsum.photos/100?6" },
+        { name: "Laguna Phuket Marathon", date: "5 มี.ค. 2026", img: "https://picsum.photos/100?7" }
+      ],
+      "Songkhla": [
+        { name: "งานวิ่งหาดสมิหลา", date: "10 เม.ย. 2026", img: "https://picsum.photos/100?8" }
+      ]
+    };
+
+    const provinceNamesTH = {
+      "Bangkok": "กรุงเทพมหานคร",
+      "ChiangMai": "เชียงใหม่",
+      "ChiangRai": "เชียงราย",
+      "Kanchanaburi": "กาญจนบุรี",
+      "Krabi": "กระบี่",
+      "Phuket": "ภูเก็ต",
+      "Ranong": "ระนอง",
+      "Chumphon": "ชุมพร",
+      "Songkhla": "สงขลา",
+      "Satun": "สตูล",
+      "Trang": "ตรัง",
+      "Phatthalung": "พัทลุง",
+      "Pattani": "ปัตตานี",
+      "Yala": "ยะลา",
+      "Narathiwat": "นราธิวาส"
+    };sum.photos/100?3" },
         { name: "Lan Na Fest", date: "12 ม.ค. 2026", img: "https://picsum.photos/100?4" }
       ]
     };
@@ -242,18 +272,21 @@
       header.textContent = "เลือกจังหวัดบนแผนที่";
     }
 
-    closeBtn.addEventListener("click", closeModal);
-    modalOverlay.addEventListener("click", closeModal);
-
-    mapObject.addEventListener("load", () => {
-      const svgDoc = mapObject.contentDocument;
-      const provinces = svgDoc.querySelectorAll("[id]");
-
-      provinces.forEach(prov => {
+    closeBtn.addEventListener      provinces.forEach(prov => {
+        // Set default province styling with borders
         prov.style.transition = "all 0.2s ease";
+        prov.style.stroke = "#666";
+        prov.style.strokeWidth = "1.5";
+        prov.style.fill = "#e8e8e8";
+        prov.style.cursor = "pointer";
         
         prov.addEventListener("mouseenter", (e) => {
           prov.classList.add("hovered");
+          const provinceName = provinceNamesTH[prov.id] || prov.id;
+          tooltip.textContent = provinceName;
+          tooltip.style.display = "block";
+          header.textContent = provinceName;
+        });prov.classList.add("hovered");
           const provinceName = provinceNamesTH[prov.id] || prov.id;
           tooltip.textContent = provinceName;
           tooltip.style.display = "block";
