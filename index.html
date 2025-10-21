@@ -229,18 +229,86 @@
     const modalOverlay = document.getElementById("modal-overlay");
     const modalProvinceName = document.getElementById("modal-province-name");
     const competitionsData = {
-      "Phuket": [
-        { name: "Phuket Triathlon", date: "15 ม.ค. 2026", img: "https://picsum.photos/100?5" },
-        { name: "Phuket Food Festival", date: "20 ม.ค. 2026", img: "https://picsum.photos/100?6" }
+      "Bangkok": [
+        { name: "Bangkok Marathon", date: "15 ธ.ค. 2025", img: "https://picsum.photos/100?1" },
+        { name: "Thailand Game Show", date: "20 ธ.ค. 2025", img: "https://picsum.photos/100?2" }
       ],
-      "Pattani": [
-        { name: "Pattani Cultural Festival", date: "25 ม.ค. 2026", img: "https://picsum.photos/100?7" }
+      "ChiangMai": [
+        { name: "Chiang Mai Flower Festival", date: "25 ธ.ค. 2025", img: "https://picsum.photos/100?3" },
+        { name: "Lanna Cultural Competition", date: "30 ธ.ค. 2025", img: "https://picsum.photos/100?4" }
+      ],
+      "ChiangRai": [
+        { name: "Golden Triangle Marathon", date: "5 ม.ค. 2026", img: "https://picsum.photos/100?5" },
+        { name: "White Temple Art Contest", date: "10 ม.ค. 2026", img: "https://picsum.photos/100?6" }
+      ],
+      "Phuket": [
+        { name: "Phuket Triathlon", date: "15 ม.ค. 2026", img: "https://picsum.photos/100?7" },
+        { name: "Andaman Sea Festival", date: "20 ม.ค. 2026", img: "https://picsum.photos/100?8" }
+      ],
+      "Krabi": [
+        { name: "Krabi Rock Climbing Championship", date: "25 ม.ค. 2026", img: "https://picsum.photos/100?9" }
+      ],
+      "Kanchanaburi": [
+        { name: "Bridge Over River Kwai Festival", date: "30 ม.ค. 2026", img: "https://picsum.photos/100?10" }
+      ],
+      "Chonburi": [
+        { name: "Pattaya Music Festival", date: "5 ก.พ. 2026", img: "https://picsum.photos/100?11" },
+        { name: "Songkran Water Festival", date: "10 ก.พ. 2026", img: "https://picsum.photos/100?12" }
+      ],
+      "Songkhla": [
+        { name: "Hat Yai International Marathon", date: "15 ก.พ. 2026", img: "https://picsum.photos/100?13" }
+      ],
+      "Sukhothai": [
+        { name: "Sukhothai Historical Park Festival", date: "20 ก.พ. 2026", img: "https://picsum.photos/100?14" }
+      ],
+      "Phitsanulok": [
+        { name: "Buddha Chinarat Festival", date: "25 ก.พ. 2026", img: "https://picsum.photos/100?15" }
       ]
     };
 
-    // Only include provinces that actually exist in the SVG
+    // All provinces that actually exist in the SVG
     const provinceNamesTH = {
+      "Bangkok": "กรุงเทพมหานคร",
+      "Nonthaburi": "นนทบุรี",
+      "Lopburi": "ลพบุรี",
+      "Saraburi": "สระบุรี",
+      "Chonburi": "ชลบุรี",
+      "Rayong": "ระยอง",
+      "Chanthaburi": "จันทบุรี",
+      "Trat": "ตราด",
+      "Chachoengsao": "ฉะเชิงเทรา",
+      "Prachinburi": "ปราจีนบุรี",
+      "Surin": "สุรินทร์",
+      "Sisaket": "ศรีสะเกษ",
+      "Yasothon": "ยโสธร",
+      "Chaiyaphum": "ชัยภูมิ",
+      "Loei": "เลย",
+      "Kalasin": "กาฬสินธุ์",
+      "Mukdahan": "มุกดาหาร",
+      "ChiangMai": "เชียงใหม่",
+      "Lamphun": "ลำพูน",
+      "Lampang": "ลำปาง",
+      "Uttaradit": "อุตรดิตถ์",
+      "Phrae": "แพร่",
+      "Nan": "น่าน",
+      "Phayao": "พะเยา",
+      "ChiangRai": "เชียงราย",
+      "Tak": "ตาก",
+      "Sukhothai": "สุโขทัย",
+      "Phitsanulok": "พิษณุโลก",
+      "Phichit": "พิจิตร",
+      "Phetchabun": "เพชรบูรณ์",
+      "Ratchaburi": "ราชบุรี",
+      "Kanchanaburi": "กาญจนบุรี",
+      "Phetchaburi": "เพชรบุรี",
+      "Krabi": "กระบี่",
       "Phuket": "ภูเก็ต",
+      "Ranong": "ระนอง",
+      "Chumphon": "ชุมพร",
+      "Songkhla": "สงขลา",
+      "Satun": "สตูล",
+      "Trang": "ตรัง",
+      "Phatthalung": "พัทลุง",
       "Pattani": "ปัตตานี",
       "Yala": "ยะลา",
       "Narathiwat": "นราธิวาส"
