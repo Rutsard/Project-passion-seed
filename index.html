@@ -35,8 +35,8 @@
 
     #map-container {
       position: relative;
-      width: 55vw;
-      height: 80vh;
+      width: 68vw;
+      height: 86vh;
       box-shadow: 0 0 10px rgba(0,0,0,0.1);
       background: white;
       border-radius: 12px;
@@ -80,7 +80,7 @@
 
     .hovered {
       stroke: #e74c3c !important;
-      stroke-width: 2px;
+      stroke-width: 2.5px !important;
       filter: drop-shadow(0 4px 8px rgba(231, 76, 60, 0.3));
       transform: translateY(-2px);
       transition: all 0.2s ease;
@@ -221,19 +221,105 @@
     const mapObject = document.getElementById("thailand-map");
 
     const competitionsData = {
-      "Bangkok": [
+      bangkok: [
         { name: "Bangkok Marathon", date: "10 ธ.ค. 2025", img: "https://picsum.photos/100?1" },
         { name: "Esports Tournament", date: "20 ธ.ค. 2025", img: "https://picsum.photos/100?2" }
       ],
-      "ChiangMai": [
+      chiang_mai: [
         { name: "Chiang Mai Half Marathon", date: "5 ม.ค. 2026", img: "https://picsum.photos/100?3" },
         { name: "Lan Na Fest", date: "12 ม.ค. 2026", img: "https://picsum.photos/100?4" }
       ]
     };
 
+    // Normalize various ID styles to snake_case lowercase
+    function normalizeId(rawId) {
+      if (!rawId) return "";
+      return rawId
+        .replace(/\s+/g, "_")
+        .replace(/([a-z0-9])([A-Z])/g, "$1_$2")
+        .replace(/_+/g, "_")
+        .toLowerCase();
+    }
+
+    // Thai names for all 77 provinces, keyed by normalized snake_case id
     const provinceNamesTH = {
-      "Bangkok": "กรุงเทพมหานคร",
-      "ChiangMai": "เชียงใหม่"
+      bangkok: "กรุงเทพมหานคร",
+      samut_prakan: "สมุทรปราการ",
+      nonthaburi: "นนทบุรี",
+      pathum_thani: "ปทุมธานี",
+      phra_nakhon_si_ayutthaya: "พระนครศรีอยุธยา",
+      ang_thong: "อ่างทอง",
+      lopburi: "ลพบุรี",
+      sing_buri: "สิงห์บุรี",
+      chai_nat: "ชัยนาท",
+      saraburi: "สระบุรี",
+      chonburi: "ชลบุรี",
+      rayong: "ระยอง",
+      chanthaburi: "จันทบุรี",
+      trat: "ตราด",
+      chachoengsao: "ฉะเชิงเทรา",
+      prachinburi: "ปราจีนบุรี",
+      nakhon_nayok: "นครนายก",
+      sa_kaeo: "สระแก้ว",
+      nakhon_ratchasima: "นครราชสีมา",
+      buriram: "บุรีรัมย์",
+      surin: "สุรินทร์",
+      sisaket: "ศรีสะเกษ",
+      ubon_ratchathani: "อุบลราชธานี",
+      yasothon: "ยโสธร",
+      chaiyaphum: "ชัยภูมิ",
+      amnat_charoen: "อำนาจเจริญ",
+      bueng_kan: "บึงกาฬ",
+      nong_bua_lamphu: "หนองบัวลำภู",
+      khon_kaen: "ขอนแก่น",
+      udon_thani: "อุดรธานี",
+      loei: "เลย",
+      nong_khai: "หนองคาย",
+      maha_sarakham: "มหาสารคาม",
+      roi_et: "ร้อยเอ็ด",
+      kalasin: "กาฬสินธุ์",
+      sakon_nakhon: "สกลนคร",
+      nakhon_phanom: "นครพนม",
+      mukdahan: "มุกดาหาร",
+      chiang_mai: "เชียงใหม่",
+      lamphun: "ลำพูน",
+      lampang: "ลำปาง",
+      uttaradit: "อุตรดิตถ์",
+      phrae: "แพร่",
+      nan: "น่าน",
+      phayao: "พะเยา",
+      chiang_rai: "เชียงราย",
+      mae_hong_son: "แม่ฮ่องสอน",
+      nakhon_sawan: "นครสวรรค์",
+      uthai_thani: "อุทัยธานี",
+      kamphaeng_phet: "กำแพงเพชร",
+      tak: "ตาก",
+      sukhothai: "สุโขทัย",
+      phitsanulok: "พิษณุโลก",
+      phichit: "พิจิตร",
+      phetchabun: "เพชรบูรณ์",
+      ratchaburi: "ราชบุรี",
+      kanchanaburi: "กาญจนบุรี",
+      suphan_buri: "สุพรรณบุรี",
+      nakhon_pathom: "นครปฐม",
+      samut_sakhon: "สมุทรสาคร",
+      samut_songkhram: "สมุทรสงคราม",
+      phetchaburi: "เพชรบุรี",
+      prachuap_khiri_khan: "ประจวบคีรีขันธ์",
+      nakhon_si_thammarat: "นครศรีธรรมราช",
+      krabi: "กระบี่",
+      phang_nga: "พังงา",
+      phuket: "ภูเก็ต",
+      surat_thani: "สุราษฎร์ธานี",
+      ranong: "ระนอง",
+      chumphon: "ชุมพร",
+      songkhla: "สงขลา",
+      satun: "สตูล",
+      trang: "ตรัง",
+      phatthalung: "พัทลุง",
+      pattani: "ปัตตานี",
+      yala: "ยะลา",
+      narathiwat: "นราธิวาส"
     };
 
     function closeModal() {
@@ -247,12 +333,18 @@
 
     mapObject.addEventListener("load", () => {
       const svgDoc = mapObject.contentDocument;
-      // Inject hover styles into the embedded SVG so classes apply within its own document
+      // Inject styles into the embedded SVG so classes apply within its own document
       const styleEl = svgDoc.createElementNS("http://www.w3.org/2000/svg", "style");
       styleEl.textContent = `
+        /* default thicker black outline for provinces */
+        path[id], polygon[id], rect[id], g[id] {
+          stroke: #111 !important;
+          stroke-width: 1.5px !important;
+          vector-effect: non-scaling-stroke;
+        }
         .hovered {
           stroke: #e74c3c !important;
-          stroke-width: 2px !important;
+          stroke-width: 2.5px !important;
           filter: drop-shadow(0 4px 8px rgba(231, 76, 60, 0.3));
           transform: translateY(-2px);
           transition: all 0.2s ease;
@@ -270,7 +362,8 @@
         
         prov.addEventListener("mouseenter", (e) => {
           prov.classList.add("hovered");
-          const provinceName = provinceNamesTH[prov.id] || prov.id;
+          const key = normalizeId(prov.id);
+          const provinceName = provinceNamesTH[key] || prov.id;
           tooltip.textContent = provinceName;
           tooltip.style.display = "block";
           // Ensure province element is on top when hovered
@@ -296,11 +389,12 @@
 
         prov.addEventListener("click", (e) => {
           e.stopPropagation();
-          const provinceName = provinceNamesTH[prov.id] || prov.id;
+          const key = normalizeId(prov.id);
+          const provinceName = provinceNamesTH[key] || prov.id;
           modalProvinceName.textContent = provinceName;
           header.textContent = provinceName;
 
-          const data = competitionsData[prov.id];
+          const data = competitionsData[key];
           if (data && data.length > 0) {
             modalCompetitionList.innerHTML = data.map(item => `
               <div class="competition">
