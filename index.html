@@ -71,18 +71,20 @@
       width: 60px;
       height: 60px;
       border-radius: 8px;
-      object-fit: cover;
+      object    .province-path {
+      fill: #e8f4f8;
+      stroke: #bbb;
+      stroke-width: 1px;
+      cursor: pointer;
+      transition: all 0.3s ease;
     }
 
-    .competition span {
-      display: block;
-    }
-
-    .hovered {
+    .province-path:hover {
       stroke: #e74c3c !important;
-      stroke-width: 2px;
-      filter: drop-shadow(0 4px 8px rgba(231, 76, 60, 0.3));
-      transform: translateY(-2px);
+      stroke-width: 3px;
+      filter: drop-shadow(0 6px 12px rgba(231, 76, 60, 0.4));
+      transform: translateY(-3px);
+    }orm: translateY(-2px);
       transition: all 0.2s ease;
       cursor: pointer;
     }
@@ -144,18 +146,9 @@
       justify-content: space-between;
       align-items: center;
       padding: 1.5rem;
-      border-bottom: 1px solid #eee;
-    }
-
-    .modal-header h2 {
-      margin: 0;
-      font-size: 1.5rem;
-      color: #333;
-    }
-
     .close-btn {
-      width: 32px;
-      height: 32px;
+      width: 36px;
+      height: 36px;
       border: none;
       background: #f5f6fa;
       border-radius: 50%;
@@ -163,20 +156,37 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 20px;
+      font-size: 24px;
       color: #666;
+      transition: all 0.3s ease;
+      font-weight: bold;
+    }
+
+    .close-btn:hover {
+      background: #e74c3c;
+      color: white;
+      transform: rotate(90deg) scale(1.1);
+      box-shadow: 0 4px 12px rgba(231, 76, 60, 0.3);
+    }color: #666;
       transition: all 0.2s;
     }
 
     .close-btn:hover {
       background: #e74c3c;
       color: white;
-      transform: rotate(90deg);
+      tra    .no-competitions {
+      text-align: center;
+      padding: 3rem 2rem;
+      color: #888;
+      background: #f9f9f9;
+      border-radius: 12px;
+      margin: 1rem 0;
     }
 
-    .modal-content {
-      padding: 1.5rem;
-      overflow-y: auto;
+    .no-competitions p {
+      margin: 0.5rem 0;
+      line-height: 1.6;
+    }y: auto;
       max-height: calc(80vh - 80px);
     }
 
@@ -216,10 +226,6 @@
     const modal = document.getElementById("competition-modal");
     const modalOverlay = document.getElementById("modal-overlay");
     const modalProvinceName = document.getElementById("modal-province-name");
-    const modalCompetitionList = document.getElementById("modal-competition-list");
-    const closeBtn = document.querySelector(".close-btn");
-    const mapObject = document.getElementById("thailand-map");
-
     const competitionsData = {
       "Bangkok": [
         { name: "Bangkok Marathon", date: "10 ธ.ค. 2025", img: "https://picsum.photos/100?1" },
@@ -227,6 +233,91 @@
       ],
       "ChiangMai": [
         { name: "Chiang Mai Half Marathon", date: "5 ม.ค. 2026", img: "https://picsum.photos/100?3" },
+        { name: "Lan Na Fest", date: "12 ม.ค. 2026", img: "https://picsum.photos/100?4" }
+      ],
+      "Phuket": [
+        { name: "Phuket Triathlon", date: "15 ม.ค. 2026", img: "https://picsum.photos/100?5" }
+      ]
+    };
+
+    const provinceNamesTH = {
+      "Bangkok": "กรุงเทพมหานคร",
+      "ChiangMai": "เชียงใหม่", 
+      "ChiangRai": "เชียงราย",
+      "MaeHongSon": "แม่ฮ่องสอน",
+      "Lamphun": "ลำพูน",
+      "Lampang": "ลำปาง",
+      "Uttaradit": "อุตรดิตถ์",
+      "Phrae": "แพร่",
+      "Nan": "น่าน",
+      "Phayao": "พะเยา",
+      "Sukhothai": "สุโขทัย",
+      "Tak": "ตาก",
+      "Kamphaengphet": "กำแพงเพชร",
+      "Phichit": "พิจิตร",
+      "Phitsanulok": "พิษณุโลก",
+      "Uthaithani": "อุทัยธานี",
+      "Nakhonsawan": "นครสวรรค์",
+      "Chainat": "ชัยนาท",
+      "Singburi": "สิงห์บุรี",
+      "Lopburi": "ลพบุรี",
+      "Angthong": "อ่างทอง",
+      "Suphanburi": "สุพรรณบุรี",
+      "Ayutthaya": "พระนครศรีอยุธยา",
+      "Saraburi": "สระบุรี",
+      "Nonthaburi": "นนทบุรี",
+      "Pathumthani": "ปทุมธานี",
+      "Nakhonnayok": "นครนายก",
+      "Prachinburi": "ปราจีนบุรี",
+      "Sakaeo": "สระแก้ว",
+      "Chachoengsao": "ฉะเชิงเทรา",
+      "Chonburi": "ชลบุรี",
+      "Rayong": "ระยอง",
+      "Chanthaburi": "จันทบุรี",
+      "Trat": "ตราด",
+      "Kanchanaburi": "กาญจนบุรี",
+      "Ratchaburi": "ราชบุรี",
+      "Phetchaburi": "เพชรบุรี",
+      "Prachuapkhirikhan": "ประจวบคีรีขันธ์",
+      "Nakhonpathom": "นครปฐม",
+      "Samutprakan": "สมุทรปราการ",
+      "Samutsakhon": "สมุทรสาคร",
+      "Samutsongkhram": "สมุทรสงคราม",
+      "Loei": "เลย",
+      "Nongkhai": "หนองคาย",
+      "Nongbualamphu": "หนองบัวลำภู",
+      "Udonthani": "อุดรธานี",
+      "Buengkan": "บึงกาฬ",
+      "Sakonakhon": "สกลนคร",
+      "Nakhonphanom": "นครพนม",
+      "Mukdahan": "มุกดาหาร",
+      "Yasothon": "ยโสธร",
+      "Amnatcharoen": "อำนาจเจริญ",
+      "Ubonratchathani": "อุบลราชธานี",
+      "Sisaket": "ศรีสะเกษ",
+      "Surin": "สุรินทร์",
+      "Buriram": "บุรีรัมย์",
+      "Nakhonratchasima": "นครราชสีมา",
+      "Chaiyaphum": "ชัยภูมิ",
+      "Khonkaen": "ขอนแก่น",
+      "Kalasin": "กาฬสินธุ์",
+      "Mahasarakham": "มหาสารคาม",
+      "Roiet": "ร้อยเอ็ด",
+      "Chumphon": "ชุมพร",
+      "Ranong": "ระนอง",
+      "Suratthani": "สุราษฎร์ธานี",
+      "Phangnga": "พังงา",
+      "Phuket": "ภูเก็ต",
+      "Krabi": "กระบี่",
+      "Nakhonsithammarat": "นครศรีธรรมราช",
+      "Phatthalung": "พัทลุง",
+      "Trang": "ตรัง",
+      "Satun": "สตูล",
+      "Songkhla": "สงขลา",
+      "Pattani": "ปัตตานี",
+      "Yala": "ยะลา",
+      "Narathiwat": "นราธิวาส"
+    };100?3" },
         { name: "Lan Na Fest", date: "12 ม.ค. 2026", img: "https://picsum.photos/100?4" }
       ]
     };
@@ -237,23 +328,15 @@
     };
 
     function closeModal() {
-      modal.classList.remove("show");
-      modalOverlay.classList.remove("show");
-      header.textContent = "เลือกจังหวัดบนแผนที่";
-    }
-
-    closeBtn.addEventListener("click", closeModal);
-    modalOverlay.addEventListener("click", closeModal);
-
-    mapObject.addEventListener("load", () => {
+      modal.classList.remove("sh    mapObject.addEventListener("load", () => {
       const svgDoc = mapObject.contentDocument;
-      const provinces = svgDoc.querySelectorAll("[id]");
+      const provinces = svgDoc.querySelectorAll("path[id]");
 
       provinces.forEach(prov => {
-        prov.style.transition = "all 0.2s ease";
+        // Add province-path class for styling
+        prov.classList.add("province-path");
         
         prov.addEventListener("mouseenter", (e) => {
-          prov.classList.add("hovered");
           const provinceName = provinceNamesTH[prov.id] || prov.id;
           tooltip.textContent = provinceName;
           tooltip.style.display = "block";
@@ -261,12 +344,12 @@
         });
 
         prov.addEventListener("mousemove", (e) => {
-          tooltip.style.left = e.clientX + 15 + "px";
-          tooltip.style.top = e.clientY + 15 + "px";
+          const rect = mapObject.getBoundingClientRect();
+          tooltip.style.left = (e.clientX - rect.left + 15) + "px";
+          tooltip.style.top = (e.clientY - rect.top + 15) + "px";
         });
 
         prov.addEventListener("mouseleave", () => {
-          prov.classList.remove("hovered");
           tooltip.style.display = "none";
           if (!modal.classList.contains("show")) {
             header.textContent = "เลือกจังหวัดบนแผนที่";
@@ -294,6 +377,17 @@
             modalCompetitionList.innerHTML = `
               <div class="no-competitions">
                 <div style="font-size: 48px; margin-bottom: 1rem;">📅</div>
+                <p>ไม่มีรายการแข่งขันในจังหวัดนี้</p>
+                <p style="color: #666; font-size: 0.9rem;">คลิกที่จังหวัดอื่นเพื่อดูรายการแข่งขัน</p>
+              </div>
+            `;
+          }
+
+          modal.classList.add("show");
+          modalOverlay.classList.add("show");
+        });
+      });
+    });v style="font-size: 48px; margin-bottom: 1rem;">📅</div>
                 <p>ไม่มีรายการแข่งขันในจังหวัดนี้</p>
               </div>
             `;
