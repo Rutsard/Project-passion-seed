@@ -71,7 +71,7 @@
       width: 60px;
       height: 60px;
       border-radius: 8px;
-      object    /* Province styling - applied via JavaScript */
+      object    /* Province styling - force override SVG inline styles */
     .province-hover-style {
       fill: #e8f4f8 !important;
       stroke: #000 !important;
@@ -81,6 +81,7 @@
     }
 
     .province-hover-style:hover {
+      fill: #d4f1f9 !important;
       stroke: #e74c3c !important;
       stroke-width: 3px !important;
       filter: drop-shadow(0 4px 8px rgba(231, 76, 60, 0.4)) !important;
@@ -264,7 +265,14 @@
       allPaths.forEach(prov => {
         // Only process paths that are actual provinces
         if (validProvinceIds.includes(prov.id)) {
-          // Apply province styling
+          // Force override inline SVG styles
+          prov.style.fill = "#e8f4f8";
+          prov.style.stroke = "#000";
+          prov.style.strokeWidth = "1px";
+          prov.style.cursor = "pointer";
+          prov.style.transition = "all 0.3s ease";
+          
+          // Apply province styling class
           prov.classList.add("province-hover-style");
           
           prov.addEventListener("mouseenter", (e) => {
@@ -272,6 +280,13 @@
             tooltip.textContent = provinceName;
             tooltip.style.display = "block";
             header.textContent = provinceName;
+            
+            // Force hover styles
+            prov.style.fill = "#d4f1f9";
+            prov.style.stroke = "#e74c3c";
+            prov.style.strokeWidth = "3px";
+            prov.style.filter = "drop-shadow(0 4px 8px rgba(231, 76, 60, 0.4))";
+            prov.style.transform = "translateY(-2px)";
           });
 
           prov.addEventListener("mousemove", (e) => {
@@ -285,6 +300,13 @@
             if (!modal.classList.contains("show")) {
               header.textContent = "เลือกจังหวัดบนแผนที่";
             }
+            
+            // Reset to normal styles
+            prov.style.fill = "#e8f4f8";
+            prov.style.stroke = "#000";
+            prov.style.strokeWidth = "1px";
+            prov.style.filter = "none";
+            prov.style.transform = "none";
           });
 
           prov.addEventListener("click", (e) => {
