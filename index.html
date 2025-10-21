@@ -247,9 +247,25 @@
 
     mapObject.addEventListener("load", () => {
       const svgDoc = mapObject.contentDocument;
-      const provinces = svgDoc.querySelectorAll("[id]");
+      // Inject hover styles into the embedded SVG so classes apply within its own document
+      const styleEl = svgDoc.createElementNS("http://www.w3.org/2000/svg", "style");
+      styleEl.textContent = `
+        .hovered {
+          stroke: #e74c3c !important;
+          stroke-width: 2px !important;
+          filter: drop-shadow(0 4px 8px rgba(231, 76, 60, 0.3));
+          transform: translateY(-2px);
+          transition: all 0.2s ease;
+          cursor: pointer;
+        }
+      `;
+      svgDoc.documentElement.appendChild(styleEl);
+
+      // Target only visible shape/group elements with ids, skip defs
+      const provinces = svgDoc.querySelectorAll("path[id], polygon[id], rect[id], g[id]");
 
       provinces.forEach(prov => {
+        if (prov.closest("defs")) return; // skip definitions
         prov.style.transition = "all 0.2s ease";
         
         prov.addEventListener("mouseenter", (e) => {
@@ -257,12 +273,17 @@
           const provinceName = provinceNamesTH[prov.id] || prov.id;
           tooltip.textContent = provinceName;
           tooltip.style.display = "block";
+          // Ensure province element is on top when hovered
+          if (prov.parentNode && typeof prov.parentNode.appendChild === 'function') {
+            prov.parentNode.appendChild(prov);
+          }
           header.textContent = provinceName;
         });
 
         prov.addEventListener("mousemove", (e) => {
-          tooltip.style.left = e.clientX + 15 + "px";
-          tooltip.style.top = e.clientY + 15 + "px";
+          const rect = mapObject.getBoundingClientRect();
+          tooltip.style.left = (e.clientX - rect.left + 15) + "px";
+          tooltip.style.top = (e.clientY - rect.top + 15) + "px";
         });
 
         prov.addEventListener("mouseleave", () => {
