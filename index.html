@@ -5,113 +5,104 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>TuemCamp</title>
-  <nav>
-    <div class="logo">
-      <div class="main">Tuem</div>
-      <div class="sub">Camp</div>
-    </div>
-    <div class="nav-links">
-      <ul>
-        <li><a href="#">Home</a></li>
-        <li><a href="#">Region</a></li>
-        <li><a href="#">University</a></li>
-      </ul>
-    </div>
-  </nav>
   <style>
-    body {
+    * {
       margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
       font-family: "Segoe UI", sans-serif;
       background: #f5f6fa;
       overflow: hidden;
-      display: flex;
-      flex-direction: column;
       height: 100vh;
+    }
+
+    nav {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 50px;
+      border-bottom: 1px solid #ddd;
+      background: white;
+      z-index: 100;
+      position: relative;
+    }
+
+    .logo {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 5px;
+      font-weight: bold;
+      font-size: 1.5rem;
+    }
+
+    .main {
+      color: #e74c3c;
+    }
+
+    .sub {
+      color: #333;
+    }
+
+    .nav-links ul {
+      display: flex;
+      gap: 40px;
+      list-style: none;
+    }
+
+    .nav-links a {
+      text-decoration: none;
+      color: #333;
+      font-weight: 500;
+      transition: color 0.3s ease;
+    }
+
+    .nav-links a:hover {
+      color: #e74c3c;
     }
 
     header {
       text-align: center;
-      font-size: 2rem;
+      font-size: 1.5rem;
       font-weight: bold;
       color: #333;
       padding: 1rem 0;
-      min-height: 3rem;
+      background: white;
+      border-bottom: 1px solid #eee;
     }
 
-    main {
-      flex: 1;
-      display: flex;
-      justify-content: center;
-      align    #map-container {
-      position: absolute;
+    #map-container {
+      position: fixed;
       width: 100vw;
-      height: 100vh;
-      background: none;
-      border: none;
-      border-radius: 0;
-      box-shadow: none;
-      overflow: auto;
-      transition: transform 0.6s ease;
-      top: 0;
+      height: calc(100vh - 120px);
+      background: #f5f6fa;
+      overflow: hidden;
+      top: 120px;
       left: 0;
-      z-index: 1;
-      margin-top: 40px;
+      cursor: grab;
     }
 
-    object {
-      width: 200%;
-      height: 200%;
-      min-width: 1200px;
-      min-height: 1200px;
-    }  }
+    #map-container.grabbing {
+      cursor: grabbing;
+    }
 
-    object {
+    #map-wrapper {
+      transform-origin: center center;
+      transition: transform 0.05s ease-out;
       width: 100%;
       height: 100%;
-    }
-
-    /* 
-    #info-panel {
-      width: 25vw;
-      min-width: 250px;
-      height: 80vh;
-      background: white;
-      border-radius: 12px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
-      padding: 1rem;
-      overflow-y: auto;
-    } */
-
-    .competition {
       display: flex;
+      justify-content: center;
       align-items: center;
-      gap: 1rem;
-      border-bottom: 1px solid #eee;
-      padding: 0.5rem 0;
     }
 
-    .competition img {
-      width: 60px;
-      height: 60px;
-      border-radius: 8px;
-      object-fit: cover;
-    }
-
-    /* Province styling - force override SVG inline styles */
-    .province-hover-style {
-      fill: #e8f4f8 !important;
-      stroke: #000 !important;
-      stroke-width: 1px !important;
-      cursor: pointer !important;
-      transition: all 0.3s ease !important;
-    }
-
-    .province-hover-style:hover {
-      fill: #d4f1f9 !important;
-      stroke: #e74c3c !important;
-      stroke-width: 3px !important;
-      filter: drop-shadow(0 4px 8px rgba(231, 76, 60, 0.4)) !important;
-      transform: translateY(-2px) !important;
+    object {
+      width: 700px;
+      height: 700px;
     }
 
     #province-tooltip {
@@ -127,85 +118,66 @@
       white-space: nowrap;
     }
 
-    #competition-modal {
+    #info-panel {
       position: fixed;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%) scale(0.9);
+      right: 20px;
+      top: 140px;
+      width: 350px;
+      max-height: calc(100vh - 160px);
       background: white;
-      border-radius: 16px;
-      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
-      width: 90%;
-      max-width: 500px;
-      max-height: 80vh;
-      overflow: hidden;
-      z-index: 2000;
-      opacity: 0;
-      transition: all 0.3s ease;
-      pointer-events: none;
-    }
-
-    #competition-modal.show {
-      opacity: 1;
-      transform: translate(-50%, -50%) scale(1);
-      pointer-events: all;
-    }
-
-    #modal-overlay {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0, 0, 0, 0.5);
-      z-index: 1999;
+      border-radius: 12px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+      padding: 1.5rem;
+      overflow-y: auto;
+      z-index: 1000;
       display: none;
     }
 
-    #modal-overlay.show {
+    #info-panel.show {
       display: block;
+      animation: slideIn 0.3s ease;
     }
 
-    .modal-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 1.5rem;
-      border-bottom: 1px solid #eee;
+    @keyframes slideIn {
+      from {
+        transform: translateX(100%);
+        opacity: 0;
+      }
+      to {
+        transform: translateX(0);
+        opacity: 1;
+      }
     }
 
-    .modal-header h2 {
-      margin: 0;
+    #info-panel h3 {
+      margin-top: 0;
       color: #333;
+      font-size: 1.5rem;
+      border-bottom: 2px solid #e74c3c;
+      padding-bottom: 0.5rem;
+      margin-bottom: 1rem;
     }
 
-    .close-btn {
-      width: 36px;
-      height: 36px;
-      border: none;
-      background: #f5f6fa;
-      border-radius: 50%;
-      cursor: pointer;
+    .competition {
       display: flex;
       align-items: center;
-      justify-content: center;
-      font-size: 24px;
-      color: #666;
-      transition: all 0.3s ease;
-      font-weight: bold;
+      gap: 1rem;
+      border-bottom: 1px solid #eee;
+      padding: 0.75rem 0;
+      transition: background 0.2s ease;
     }
 
-    .close-btn:hover {
-      background: #e74c3c;
-      color: white;
-      transform: rotate(90deg) scale(1.1);
-      box-shadow: 0 4px 12px rgba(231, 76, 60, 0.3);
+    .competition:hover {
+      background: #f9f9f9;
+      border-radius: 8px;
+      padding-left: 0.5rem;
     }
 
-    .modal-content {
-      padding: 1rem;
-      overflow-y: auto;
-      max-height: calc(80vh - 80px);
+    .competition img {
+      width: 60px;
+      height: 60px;
+      border-radius: 8px;
+      object-fit: cover;
     }
 
     .no-competitions {
@@ -221,57 +193,154 @@
       margin: 0.5rem 0;
       line-height: 1.6;
     }
-    nav{
+
+    .zoom-controls {
+      position: fixed;
+      left: 20px;
+      bottom: 30px;
+      z-index: 1000;
       display: flex;
-      flex-direction: row;
-      justify-content: space-between;
-      padding: 10px 50px;
-      border: 1px solid black;
+      flex-direction: column;
+      gap: 10px;
+      background: white;
+      padding: 10px;
+      border-radius: 8px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
     }
-    .logo{
-      display: flex;
-      justify-content: center;
-      align-items: center;
+
+    .zoom-btn {
+      width: 45px;
+      height: 45px;
+      border: none;
+      background: #e74c3c;
+      color: white;
+      font-size: 22px;
+      font-weight: bold;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.2s ease;
     }
-    .nav-links ul{
-      display: flex;
-      gap: 40px;
+
+    .zoom-btn:hover {
+      background: #c0392b;
+      transform: scale(1.1);
+      box-shadow: 0 4px 12px rgba(231, 76, 60, 0.3);
+    }
+
+    .zoom-btn:active {
+      transform: scale(0.95);
+    }
+
+    .zoom-level {
+      text-align: center;
+      font-size: 13px;
+      font-weight: 600;
+      color: #666;
+      padding: 5px 0;
+    }
+
+    /* Province styling */
+    .province-hover-style {
+      fill: #e8f4f8 !important;
+      stroke: #000 !important;
+      stroke-width: 1px !important;
+      cursor: pointer !important;
+      transition: all 0.3s ease !important;
+    }
+
+    .province-hover-style:hover {
+      fill: #d4f1f9 !important;
+      stroke: #e74c3c !important;
+      stroke-width: 3px !important;
+      filter: drop-shadow(0 4px 8px rgba(231, 76, 60, 0.4)) !important;
+    }
+
+    .instruction {
+      position: fixed;
+      left: 20px;
+      bottom: 240px;
+      background: white;
+      padding: 15px;
+      border-radius: 8px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      font-size: 13px;
+      color: #666;
+      max-width: 200px;
+      z-index: 1000;
+    }
+
+    .instruction strong {
+      color: #e74c3c;
+      display: block;
+      margin-bottom: 5px;
     }
   </style>
 </head>
 
 <body>
+  <nav>
+    <div class="logo">
+      <div class="main">Tuem</div>
+      <div class="sub">Camp</div>
+    </div>
+    <div class="nav-links">
+      <ul>
+        <li><a href="#">Home</a></li>
+        <li><a href="#">Region</a></li>
+        <li><a href="#">University</a></li>
+      </ul>
+    </div>
+  </nav>
+
   <header id="province-name">เลือกจังหวัดบนแผนที่ที่ต้องการทราบการแข่งขัน/ค่าย</header>
-  <section>
-    <div id="map-container">
+
+  <div id="map-container">
+    <div id="map-wrapper">
       <object id="thailand-map" type="image/svg+xml" data="Thailand.svg"></object>
-      <div id="province-tooltip"></div>
     </div>
+    <div id="province-tooltip"></div>
+  </div>
 
-    <div id="info-panel">
+  <div id="info-panel">
+    <h3 id="sidebar-province-name">ชื่อจังหวัด</h3>
+    <div id="sidebar-competition-list"></div>
+  </div>
 
-    </div>
-  </section>
-  
-  <div id="modal-overlay"></div>
-  <div id="competition-modal">
-    <div class="modal-header">
-      <h2 id="modal-province-name"></h2>
-      <button class="close-btn">✕</button>
-    </div>
-    <div class="modal-content" id="modal-competition-list">
-    </div>
+  <div class="instruction">
+    <strong>วิธีใช้งาน:</strong>
+    • กด Ctrl + เลื่อนลูกกล้อง เพื่อซูม<br>
+    • ลากเมาส์เพื่อเลื่อนแผนที่<br>
+    • คลิกจังหวัดเพื่อดูรายละเอียด
+  </div>
+
+  <div class="zoom-controls">
+    <button class="zoom-btn" id="zoom-in" title="ซูมเข้า">+</button>
+    <div class="zoom-level" id="zoom-level">100%</div>
+    <button class="zoom-btn" id="zoom-out" title="ซูมออก">−</button>
+    <button class="zoom-btn" id="zoom-reset" style="font-size: 18px;" title="รีเซ็ต">⟲</button>
   </div>
 
   <script>
     const header = document.getElementById("province-name");
     const tooltip = document.getElementById("province-tooltip");
-    const modal = document.getElementById("competition-modal");
-    const modalOverlay = document.getElementById("modal-overlay");
-    const modalProvinceName = document.getElementById("modal-province-name");
-    const modalCompetitionList = document.getElementById("modal-competition-list");
-    const closeBtn = document.querySelector(".close-btn");
     const mapObject = document.getElementById("thailand-map");
+    const mapContainer = document.getElementById("map-container");
+    const mapWrapper = document.getElementById("map-wrapper");
+    const infoPanel = document.getElementById("info-panel");
+    const sidebarProvinceName = document.getElementById("sidebar-province-name");
+    const sidebarCompetitionList = document.getElementById("sidebar-competition-list");
+    const zoomInBtn = document.getElementById("zoom-in");
+    const zoomOutBtn = document.getElementById("zoom-out");
+    const zoomResetBtn = document.getElementById("zoom-reset");
+    const zoomLevelDisplay = document.getElementById("zoom-level");
+
+    // Zoom and Pan variables
+    let scale = 1;
+    let translateX = 0;
+    let translateY = 0;
+    let isDragging = false;
+    let startX = 0;
+    let startY = 0;
 
     const competitionsData = {
       "bangkok": [
@@ -289,7 +358,6 @@
       "Phuket": [
         { name: "Phuket Triathlon", date: "15 ม.ค. 2026", img: "https://picsum.photos/100?5" },
         { name: "Phuket Food Festival", date: "20 ม.ค. 2026", img: "https://picsum.photos/100?6" },
-        { name: "Phuket Triathlon", date: "15 ม.ค. 2026", img: "https://picsum.photos/100?7" },
         { name: "Andaman Sea Festival", date: "20 ม.ค. 2026", img: "https://picsum.photos/100?8" }
       ],
       "Krabi": [
@@ -309,13 +377,13 @@
         { name: "Sukhothai Historical Park Festival", date: "20 ก.พ. 2026", img: "https://picsum.photos/100?14" }
       ],
       "Pattani": [
-        { name: "Pattani Cultural Festival", date: "25 ม.ค. 2026", img: "https://picsum.photos/100?7" }],
+        { name: "Pattani Cultural Festival", date: "25 ม.ค. 2026", img: "https://picsum.photos/100?7" }
+      ],
       "phitsanulok": [
         { name: "Buddha Chinarat Festival", date: "25 ก.พ. 2026", img: "https://picsum.photos/100?15" }
       ]
     };
 
-    // Only include provinces that actually exist in the SVG
     const provinceNamesTH = {
       "amnat_charoen": "อำนาจเจริญ",
       "Ang_Thong": "อ่างทอง",
@@ -396,34 +464,90 @@
       "yasothon": "ยโสธร"
     };
 
-    function closeModal() {
-      modal.classList.remove("show");
-      modalOverlay.classList.remove("show");
-      header.textContent = "เลือกจังหวัดบนแผนที่ที่ต้องการทราบการแข่งขัน/ค่าย";
+    function updateTransform() {
+      mapWrapper.style.transform = `translate(${translateX}px, ${translateY}px) scale(${scale})`;
+      zoomLevelDisplay.textContent = Math.round(scale * 100) + '%';
     }
 
-    closeBtn.addEventListener("click", closeModal);
-    modalOverlay.addEventListener("click", closeModal);
+    function zoom(delta, clientX, clientY) {
+      const oldScale = scale;
+      const zoomSpeed = 0.15;
 
+      if (delta > 0) {
+        scale = Math.min(scale + zoomSpeed, 4); // Max zoom 400%
+      } else {
+        scale = Math.max(scale - zoomSpeed, 0.5); // Min zoom 50%
+      }
+
+      // Zoom towards mouse position
+      if (clientX !== undefined && clientY !== undefined) {
+        const rect = mapContainer.getBoundingClientRect();
+        const x = clientX - rect.left - rect.width / 2;
+        const y = clientY - rect.top - rect.height / 2;
+
+        translateX = translateX - x * (scale - oldScale) / oldScale;
+        translateY = translateY - y * (scale - oldScale) / oldScale;
+      }
+
+      updateTransform();
+    }
+
+    // Zoom with Ctrl + Mouse Wheel
+    mapContainer.addEventListener('wheel', (e) => {
+      if (e.ctrlKey || e.metaKey) {
+        e.preventDefault();
+        zoom(e.deltaY > 0 ? -1 : 1, e.clientX, e.clientY);
+      }
+    }, { passive: false });
+
+    // Pan with mouse drag
+    mapContainer.addEventListener('mousedown', (e) => {
+      // Only start dragging if not clicking on a province
+      if (e.target === mapContainer || e.target === mapWrapper || e.target.tagName === 'OBJECT') {
+        isDragging = true;
+        startX = e.clientX - translateX;
+        startY = e.clientY - translateY;
+        mapContainer.classList.add('grabbing');
+      }
+    });
+
+    document.addEventListener('mousemove', (e) => {
+      if (isDragging) {
+        translateX = e.clientX - startX;
+        translateY = e.clientY - startY;
+        updateTransform();
+      }
+    });
+
+    document.addEventListener('mouseup', () => {
+      isDragging = false;
+      mapContainer.classList.remove('grabbing');
+    });
+
+    // Zoom buttons
+    zoomInBtn.addEventListener('click', () => zoom(1));
+    zoomOutBtn.addEventListener('click', () => zoom(-1));
+    zoomResetBtn.addEventListener('click', () => {
+      scale = 1;
+      translateX = 0;
+      translateY = 0;
+      updateTransform();
+    });
+
+    // Map interaction
     mapObject.addEventListener("load", () => {
       const svgDoc = mapObject.contentDocument;
       const allProvinces = svgDoc.querySelectorAll("path[id], g[id]");
-      const allPaths = Array.from(allProvinces);
-
-      // Filter only province paths (exclude other elements like gradients, clips, etc.)
       const validProvinceIds = Object.keys(provinceNamesTH);
 
       allProvinces.forEach(prov => {
-        // Only process paths that are actual provinces
         if (validProvinceIds.includes(prov.id)) {
-          // Force override inline SVG styles
+          // Apply province styling
           prov.style.fill = "#e8f4f8";
           prov.style.stroke = "#000";
           prov.style.strokeWidth = "1px";
           prov.style.cursor = "pointer";
           prov.style.transition = "all 0.3s ease";
-
-          // Apply province styling class
           prov.classList.add("province-hover-style");
 
           prov.addEventListener("mouseenter", (e) => {
@@ -432,43 +556,40 @@
             tooltip.style.display = "block";
             header.textContent = provinceName;
 
-            // Force hover styles
             prov.style.fill = "#d4f1f9";
             prov.style.stroke = "#e74c3c";
             prov.style.strokeWidth = "3px";
             prov.style.filter = "drop-shadow(0 4px 8px rgba(231, 76, 60, 0.4))";
-            prov.style.transform = "translateY(-2px)";
           });
 
           prov.addEventListener("mousemove", (e) => {
-            const rect = mapObject.getBoundingClientRect();
-            tooltip.style.left = (e.clientX - rect.left + 15) + "px";
-            tooltip.style.top = (e.clientY - rect.top + 15) + "px";
+            tooltip.style.left = (e.clientX + 15) + "px";
+            tooltip.style.top = (e.clientY + 15) + "px";
           });
 
           prov.addEventListener("mouseleave", () => {
             tooltip.style.display = "none";
-            if (!modal.classList.contains("show")) {
+            if (!infoPanel.classList.contains("show")) {
               header.textContent = "เลือกจังหวัดบนแผนที่ที่ต้องการทราบการแข่งขัน/ค่าย";
             }
 
-            // Reset to normal styles
             prov.style.fill = "#e8f4f8";
             prov.style.stroke = "#000";
             prov.style.strokeWidth = "1px";
             prov.style.filter = "none";
-            prov.style.transform = "none";
           });
 
           prov.addEventListener("click", (e) => {
             e.stopPropagation();
+            isDragging = false; // Prevent drag when clicking province
+            
             const provinceName = provinceNamesTH[prov.id];
-            modalProvinceName.textContent = provinceName;
             header.textContent = provinceName;
+            sidebarProvinceName.textContent = provinceName;
 
             const data = competitionsData[prov.id];
             if (data && data.length > 0) {
-              modalCompetitionList.innerHTML = data.map(item => `
+              sidebarCompetitionList.innerHTML = data.map(item => `
                 <div class="competition">
                   <img src="${item.img}" alt="${item.name}">
                   <div>
@@ -478,7 +599,7 @@
                 </div>
               `).join("");
             } else {
-              modalCompetitionList.innerHTML = `
+              sidebarCompetitionList.innerHTML = `
                 <div class="no-competitions">
                   <div style="font-size: 48px; margin-bottom: 1rem;">📅</div>
                   <p>ไม่มีรายการแข่งขันในจังหวัดนี้</p>
@@ -487,17 +608,29 @@
               `;
             }
 
-            modal.classList.add("show");
-            modalOverlay.classList.add("show");
+            infoPanel.classList.add("show");
           });
         } else {
-          // For non-province paths, apply neutral styling
+          // Non-province elements
           prov.style.fill = "#f0f0f0";
           prov.style.stroke = "#ddd";
           prov.style.strokeWidth = "0.5px";
           prov.style.pointerEvents = "none";
         }
       });
+    });
+
+    // Close sidebar when clicking outside
+    document.addEventListener('click', (e) => {
+      if (!infoPanel.contains(e.target) && 
+          e.target.id !== 'thailand-map' && 
+          !e.target.closest('path') && 
+          !e.target.closest('g')) {
+        if (infoPanel.classList.contains('show')) {
+          infoPanel.classList.remove('show');
+          header.textContent = "เลือกจังหวัดบนแผนที่ที่ต้องการทราบการแข่งขัน/ค่าย";
+        }
+      }
     });
   </script>
 </body>
