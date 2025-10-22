@@ -42,11 +42,7 @@
       flex: 1;
       display: flex;
       justify-content: center;
-      align-items: center;
-      padding: 1rem;
-    }
-
-    #map-container {
+      align    #map-container {
       position: absolute;
       width: 100vw;
       height: 100vh;
@@ -54,13 +50,20 @@
       border: none;
       border-radius: 0;
       box-shadow: none;
-      overflow: hidden;
+      overflow: auto;
       transition: transform 0.6s ease;
       top: 0;
       left: 0;
       z-index: 1;
       margin-top: 40px;
     }
+
+    object {
+      width: 200%;
+      height: 200%;
+      min-width: 1200px;
+      min-height: 1200px;
+    }  }
 
     object {
       width: 100%;
