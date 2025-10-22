@@ -1,9 +1,23 @@
 <!DOCTYPE html>
 <html lang="th">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Interactive Thailand Map Prototype</title>
+  <title>TuemCamp</title>
+  <nav>
+    <div class="logo">
+      <div class="main">Tuem</div>
+      <div class="sub">Camp</div>
+    </div>
+    <div class="nav-links">
+      <ul>
+        <li><a href="#">Home</a></li>
+        <li><a href="#">Region</a></li>
+        <li><a href="#">University</a></li>
+      </ul>
+    </div>
+  </nav>
   <style>
     body {
       margin: 0;
@@ -29,18 +43,23 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      gap: 2rem;
       padding: 1rem;
     }
 
     #map-container {
-      position: relative;
-      width: 55vw;
-      height: 80vh;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
-      background: white;
-      border-radius: 12px;
+      position: absolute;
+      width: 100vw;
+      height: 100vh;
+      background: none;
+      border: none;
+      border-radius: 0;
+      box-shadow: none;
       overflow: hidden;
+      transition: transform 0.6s ease;
+      top: 0;
+      left: 0;
+      z-index: 1;
+      margin-top: 40px;
     }
 
     object {
@@ -48,6 +67,7 @@
       height: 100%;
     }
 
+    /* 
     #info-panel {
       width: 25vw;
       min-width: 250px;
@@ -57,7 +77,7 @@
       box-shadow: 0 0 10px rgba(0,0,0,0.1);
       padding: 1rem;
       overflow-y: auto;
-    }
+    } */
 
     .competition {
       display: flex;
@@ -71,17 +91,24 @@
       width: 60px;
       height: 60px;
       border-radius: 8px;
-      object    .hovered {
+      object-fit: cover;
+    }
+
+    /* Province styling - force override SVG inline styles */
+    .province-hover-style {
+      fill: #e8f4f8 !important;
+      stroke: #000 !important;
+      stroke-width: 1px !important;
+      cursor: pointer !important;
+      transition: all 0.3s ease !important;
+    }
+
+    .province-hover-style:hover {
+      fill: #d4f1f9 !important;
       stroke: #e74c3c !important;
       stroke-width: 3px !important;
-      fill: #ffe6e6 !important;
-      filter: drop-shadow(0 6px 12px rgba(231, 76, 60, 0.4));
-      transform: translateY(-3px);
-      transition: all 0.3s ease;
-      cursor: pointer;
-    }orm: translateY(-2px);
-      transition: all 0.2s ease;
-      cursor: pointer;
+      filter: drop-shadow(0 4px 8px rgba(231, 76, 60, 0.4)) !important;
+      transform: translateY(-2px) !important;
     }
 
     #province-tooltip {
@@ -104,7 +131,7 @@
       transform: translate(-50%, -50%) scale(0.9);
       background: white;
       border-radius: 16px;
-      box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
       width: 90%;
       max-width: 500px;
       max-height: 80vh;
@@ -127,7 +154,7 @@
       left: 0;
       width: 100%;
       height: 100%;
-      background: rgba(0,0,0,0.5);
+      background: rgba(0, 0, 0, 0.5);
       z-index: 1999;
       display: none;
     }
@@ -146,13 +173,12 @@
 
     .modal-header h2 {
       margin: 0;
-      font-size: 1.5rem;
       color: #333;
     }
 
     .close-btn {
-      width: 32px;
-      height: 32px;
+      width: 36px;
+      height: 36px;
       border: none;
       background: #f5f6fa;
       border-radius: 50%;
@@ -160,14 +186,26 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 20px;
+      font-size: 24px;
       color: #666;
-      transition: all 0.2s;
+      transition: all 0.3s ease;
+      font-weight: bold;
     }
 
     .close-btn:hover {
       background: #e74c3c;
-      colo    .no-competitions {
+      color: white;
+      transform: rotate(90deg) scale(1.1);
+      box-shadow: 0 4px 12px rgba(231, 76, 60, 0.3);
+    }
+
+    .modal-content {
+      padding: 1rem;
+      overflow-y: auto;
+      max-height: calc(80vh - 80px);
+    }
+
+    .no-competitions {
       text-align: center;
       padding: 3rem 2rem;
       color: #888;
@@ -177,33 +215,41 @@
     }
 
     .no-competitions p {
-      font-size: 1.1rem;
-      margin: 0;
-    }em;
-      overflow-y: auto;
-      max-height: calc(80vh - 80px);
+      margin: 0.5rem 0;
+      line-height: 1.6;
     }
-
-    .no-competitions {
-      text-align: center;
-      padding: 2rem;
-      color: #888;
+    nav{
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      padding: 10px 50px;
+      border: 1px solid black;
+    }
+    .logo{
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    .nav-links ul{
+      display: flex;
+      gap: 40px;
     }
   </style>
 </head>
+
 <body>
-  <header id="province-name">เลือกจังหวัดบนแผนที่</header>
-  <main>
+  <header id="province-name">เลือกจังหวัดบนแผนที่ที่ต้องการทราบการแข่งขัน/ค่าย</header>
+  <section>
     <div id="map-container">
       <object id="thailand-map" type="image/svg+xml" data="Thailand.svg"></object>
       <div id="province-tooltip"></div>
     </div>
 
     <div id="info-panel">
-      
-    </div>
-  </main>
 
+    </div>
+  </section>
+  
   <div id="modal-overlay"></div>
   <div id="competition-modal">
     <div class="modal-header">
@@ -219,124 +265,238 @@
     const tooltip = document.getElementById("province-tooltip");
     const modal = document.getElementById("competition-modal");
     const modalOverlay = document.getElementById("modal-overlay");
-    const modalProvinceName = document.getElementById("modal-provinc    const competitionsData = {
-      "Bangkok": [
-        { name: "Bangkok Marathon", date: "10 ธ.ค. 2025", img: "https://picsum.photos/100?1" },
-        { name: "Esports Tournament", date: "20 ธ.ค. 2025", img: "https://picsum.photos/100?2" }
+    const modalProvinceName = document.getElementById("modal-province-name");
+    const modalCompetitionList = document.getElementById("modal-competition-list");
+    const closeBtn = document.querySelector(".close-btn");
+    const mapObject = document.getElementById("thailand-map");
+
+    const competitionsData = {
+      "bangkok": [
+        { name: "Bangkok Marathon", date: "15 ธ.ค. 2025", img: "https://picsum.photos/100?1" },
+        { name: "Thailand Game Show", date: "20 ธ.ค. 2025", img: "https://picsum.photos/100?2" }
       ],
-      "ChiangMai": [
-        { name: "Chiang Mai Half Marathon", date: "5 ม.ค. 2026", img: "https://picsum.photos/100?3" },
-        { name: "Lan Na Fest", date: "12 ม.ค. 2026", img: "https://picsum.photos/100?4" }
+      "chiang_mai": [
+        { name: "Chiang Mai Flower Festival", date: "25 ธ.ค. 2025", img: "https://picsum.photos/100?3" },
+        { name: "Lanna Cultural Competition", date: "30 ธ.ค. 2025", img: "https://picsum.photos/100?4" }
       ],
-      "ChiangRai": [
-        { name: "งานวิ่งเชียงราย", date: "15 ม.ค. 2026", img: "https://picsum.photos/100?5" }
+      "chiang_rai": [
+        { name: "Golden Triangle Marathon", date: "5 ม.ค. 2026", img: "https://picsum.photos/100?5" },
+        { name: "White Temple Art Contest", date: "10 ม.ค. 2026", img: "https://picsum.photos/100?6" }
       ],
       "Phuket": [
-        { name: "Phuket Triathlon", date: "20 ก.พ. 2026", img: "https://picsum.photos/100?6" },
-        { name: "Laguna Phuket Marathon", date: "5 มี.ค. 2026", img: "https://picsum.photos/100?7" }
+        { name: "Phuket Triathlon", date: "15 ม.ค. 2026", img: "https://picsum.photos/100?5" },
+        { name: "Phuket Food Festival", date: "20 ม.ค. 2026", img: "https://picsum.photos/100?6" },
+        { name: "Phuket Triathlon", date: "15 ม.ค. 2026", img: "https://picsum.photos/100?7" },
+        { name: "Andaman Sea Festival", date: "20 ม.ค. 2026", img: "https://picsum.photos/100?8" }
+      ],
+      "Krabi": [
+        { name: "Krabi Rock Climbing Championship", date: "25 ม.ค. 2026", img: "https://picsum.photos/100?9" }
+      ],
+      "kanchanaburi": [
+        { name: "Bridge Over River Kwai Festival", date: "30 ม.ค. 2026", img: "https://picsum.photos/100?10" }
+      ],
+      "chonburi": [
+        { name: "Pattaya Music Festival", date: "5 ก.พ. 2026", img: "https://picsum.photos/100?11" },
+        { name: "Songkran Water Festival", date: "10 ก.พ. 2026", img: "https://picsum.photos/100?12" }
       ],
       "Songkhla": [
-        { name: "งานวิ่งหาดสมิหลา", date: "10 เม.ย. 2026", img: "https://picsum.photos/100?8" }
+        { name: "Hat Yai International Marathon", date: "15 ก.พ. 2026", img: "https://picsum.photos/100?13" }
+      ],
+      "sukhothai": [
+        { name: "Sukhothai Historical Park Festival", date: "20 ก.พ. 2026", img: "https://picsum.photos/100?14" }
+      ],
+      "Pattani": [
+        { name: "Pattani Cultural Festival", date: "25 ม.ค. 2026", img: "https://picsum.photos/100?7" }],
+      "phitsanulok": [
+        { name: "Buddha Chinarat Festival", date: "25 ก.พ. 2026", img: "https://picsum.photos/100?15" }
       ]
     };
 
+    // Only include provinces that actually exist in the SVG
     const provinceNamesTH = {
-      "Bangkok": "กรุงเทพมหานคร",
-      "ChiangMai": "เชียงใหม่",
-      "ChiangRai": "เชียงราย",
-      "Kanchanaburi": "กาญจนบุรี",
-      "Krabi": "กระบี่",
-      "Phuket": "ภูเก็ต",
-      "Ranong": "ระนอง",
+      "amnat_charoen": "อำนาจเจริญ",
+      "Ang_Thong": "อ่างทอง",
+      "bangkok": "กรุงเทพมหานคร",
+      "bueng_kan": "บึงกาฬ",
+      "buriram": "บุรีรัมย์",
+      "chachoengsao": "ฉะเชิงเทรา",
+      "chai_nat": "ชัยนาท",
+      "chaiyaphum": "ชัยภูมิ",
+      "chanthaburi": "จันทบุรี",
+      "chiang_mai": "เชียงใหม่",
+      "chiang_rai": "เชียงราย",
+      "chonburi": "ชลบุรี",
       "Chumphon": "ชุมพร",
-      "Songkhla": "สงขลา",
-      "Satun": "สตูล",
-      "Trang": "ตรัง",
-      "Phatthalung": "พัทลุง",
+      "kalasin": "กาฬสินธุ์",
+      "kamphaeng_phet": "กำแพงเพชร",
+      "Kanchanaburi": "กาญจนบุรี",
+      "khon_kaen": "ขอนแก่น",
+      "Krabi": "กระบี่",
+      "lampang": "ลำปาง",
+      "lamphun": "ลำพูน",
+      "loei": "เลย",
+      "lopburi": "ลพบุรี",
+      "mae_hong_son": "แม่ฮ่องสอน",
+      "maha_sarakham": "มหาสารคาม",
+      "mukdahan": "มุกดาหาร",
+      "nakhon_nayok": "นครนายก",
+      "nakhon_pathom": "นครปฐม",
+      "nakhon_phanom": "นครพนม",
+      "nakhon_ratchasima": "นครราชสีมา",
+      "nakhon_sawan": "นครสวรรค์",
+      "Nakhon_Si_Thammarat": "นครศรีธรรมราช",
+      "nan": "น่าน",
+      "Narathiwat": "นราธิวาส",
+      "nong_bua_lamphu": "หนองบัวลำภู",
+      "nong_khai": "หนองคาย",
+      "nonthaburi": "นนทบุรี",
       "Pattani": "ปัตตานี",
+      "pathum_thani": "ปทุมธานี",
+      "phra_nakhon_si_ayutthaya": "พระนครศรีอยุธยา",
+      "Phang_Nga": "พังงา",
+      "Phatthalung": "พัทลุง",
+      "phayao": "พะเยา",
+      "phetchabun": "เพชรบูรณ์",
+      "phetchaburi": "เพชรบุรี",
+      "phichit": "พิจิตร",
+      "phitsanulok": "พิษณุโลก",
+      "phrae": "แพร่",
+      "Phuket": "ภูเก็ต",
+      "prachinburi": "ปราจีนบุรี",
+      "Prachuap_Khiri_Khan": "ประจวบคีรีขันธ์",
+      "Ranong": "ระนอง",
+      "ratchaburi": "ราชบุรี",
+      "rayong": "ระยอง",
+      "roi_et": "ร้อยเอ็ด",
+      "sa_kaeo": "สระแก้ว",
+      "sakon_nakhon": "สกลนคร",
+      "Samut_Prakan": "สมุทรปราการ",
+      "Samut_Sakhon": "สมุทรสาคร",
+      "Samut_Songkhram": "สมุทรสงคราม",
+      "saraburi": "สระบุรี",
+      "Satun": "สตูล",
+      "sing_buri": "สิงห์บุรี",
+      "sisaket": "ศรีสะเกษ",
+      "Songkhla": "สงขลา",
+      "sukhothai": "สุโขทัย",
+      "suphan_buri": "สุพรรณบุรี",
+      "Surat_Thani": "สุราษฎร์ธานี",
+      "surin": "สุรินทร์",
+      "tak": "ตาก",
+      "Trang": "ตรัง",
+      "trat": "ตราด",
+      "ubon_ratchathani": "อุบลราชธานี",
+      "udon_thani": "อุดรธานี",
+      "uthai_thani": "อุทัยธานี",
+      "uttaradit": "อุตรดิตถ์",
       "Yala": "ยะลา",
-      "Narathiwat": "นราธิวาส"
-    };sum.photos/100?3" },
-        { name: "Lan Na Fest", date: "12 ม.ค. 2026", img: "https://picsum.photos/100?4" }
-      ]
-    };
-
-    const provinceNamesTH = {
-      "Bangkok": "กรุงเทพมหานคร",
-      "ChiangMai": "เชียงใหม่"
+      "yasothon": "ยโสธร"
     };
 
     function closeModal() {
       modal.classList.remove("show");
       modalOverlay.classList.remove("show");
-      header.textContent = "เลือกจังหวัดบนแผนที่";
+      header.textContent = "เลือกจังหวัดบนแผนที่ที่ต้องการทราบการแข่งขัน/ค่าย";
     }
 
-    closeBtn.addEventListener      provinces.forEach(prov => {
-        // Set default province styling with borders
-        prov.style.transition = "all 0.2s ease";
-        prov.style.stroke = "#666";
-        prov.style.strokeWidth = "1.5";
-        prov.style.fill = "#e8e8e8";
-        prov.style.cursor = "pointer";
-        
-        prov.addEventListener("mouseenter", (e) => {
-          prov.classList.add("hovered");
-          const provinceName = provinceNamesTH[prov.id] || prov.id;
-          tooltip.textContent = provinceName;
-          tooltip.style.display = "block";
-          header.textContent = provinceName;
-        });prov.classList.add("hovered");
-          const provinceName = provinceNamesTH[prov.id] || prov.id;
-          tooltip.textContent = provinceName;
-          tooltip.style.display = "block";
-          header.textContent = provinceName;
-        });
+    closeBtn.addEventListener("click", closeModal);
+    modalOverlay.addEventListener("click", closeModal);
 
-        prov.addEventListener("mousemove", (e) => {
-          tooltip.style.left = e.clientX + 15 + "px";
-          tooltip.style.top = e.clientY + 15 + "px";
-        });
+    mapObject.addEventListener("load", () => {
+      const svgDoc = mapObject.contentDocument;
+      const allProvinces = svgDoc.querySelectorAll("path[id], g[id]");
+      const allPaths = Array.from(allProvinces);
 
-        prov.addEventListener("mouseleave", () => {
-          prov.classList.remove("hovered");
-          tooltip.style.display = "none";
-          if (!modal.classList.contains("show")) {
-            header.textContent = "เลือกจังหวัดบนแผนที่";
-          }
-        });
+      // Filter only province paths (exclude other elements like gradients, clips, etc.)
+      const validProvinceIds = Object.keys(provinceNamesTH);
 
-        prov.addEventListener("click", (e) => {
-          e.stopPropagation();
-          const provinceName = provinceNamesTH[prov.id] || prov.id;
-          modalProvinceName.textContent = provinceName;
-          header.textContent = provinceName;
+      allProvinces.forEach(prov => {
+        // Only process paths that are actual provinces
+        if (validProvinceIds.includes(prov.id)) {
+          // Force override inline SVG styles
+          prov.style.fill = "#e8f4f8";
+          prov.style.stroke = "#000";
+          prov.style.strokeWidth = "1px";
+          prov.style.cursor = "pointer";
+          prov.style.transition = "all 0.3s ease";
 
-          const data = competitionsData[prov.id];
-          if (data && data.length > 0) {
-            modalCompetitionList.innerHTML = data.map(item => `
-              <div class="competition">
-                <img src="${item.img}" alt="${item.name}">
-                <div>
-                  <span><strong>${item.name}</strong></span>
-                  <span>${item.date}</span>
+          // Apply province styling class
+          prov.classList.add("province-hover-style");
+
+          prov.addEventListener("mouseenter", (e) => {
+            const provinceName = provinceNamesTH[prov.id];
+            tooltip.textContent = provinceName;
+            tooltip.style.display = "block";
+            header.textContent = provinceName;
+
+            // Force hover styles
+            prov.style.fill = "#d4f1f9";
+            prov.style.stroke = "#e74c3c";
+            prov.style.strokeWidth = "3px";
+            prov.style.filter = "drop-shadow(0 4px 8px rgba(231, 76, 60, 0.4))";
+            prov.style.transform = "translateY(-2px)";
+          });
+
+          prov.addEventListener("mousemove", (e) => {
+            const rect = mapObject.getBoundingClientRect();
+            tooltip.style.left = (e.clientX - rect.left + 15) + "px";
+            tooltip.style.top = (e.clientY - rect.top + 15) + "px";
+          });
+
+          prov.addEventListener("mouseleave", () => {
+            tooltip.style.display = "none";
+            if (!modal.classList.contains("show")) {
+              header.textContent = "เลือกจังหวัดบนแผนที่ที่ต้องการทราบการแข่งขัน/ค่าย";
+            }
+
+            // Reset to normal styles
+            prov.style.fill = "#e8f4f8";
+            prov.style.stroke = "#000";
+            prov.style.strokeWidth = "1px";
+            prov.style.filter = "none";
+            prov.style.transform = "none";
+          });
+
+          prov.addEventListener("click", (e) => {
+            e.stopPropagation();
+            const provinceName = provinceNamesTH[prov.id];
+            modalProvinceName.textContent = provinceName;
+            header.textContent = provinceName;
+
+            const data = competitionsData[prov.id];
+            if (data && data.length > 0) {
+              modalCompetitionList.innerHTML = data.map(item => `
+                <div class="competition">
+                  <img src="${item.img}" alt="${item.name}">
+                  <div>
+                    <div><strong>${item.name}</strong></div>
+                    <div style="color: #666; font-size: 0.9rem;">${item.date}</div>
+                  </div>
                 </div>
-              </div>
-            `).join("");
-          } else {
-            modalCompetitionList.innerHTML = `
-              <div class="no-competitions">
-                <div style="font-size: 48px; margin-bottom: 1rem;">📅</div>
-                <p>ไม่มีรายการแข่งขันในจังหวัดนี้</p>
-              </div>
-            `;
-          }
+              `).join("");
+            } else {
+              modalCompetitionList.innerHTML = `
+                <div class="no-competitions">
+                  <div style="font-size: 48px; margin-bottom: 1rem;">📅</div>
+                  <p>ไม่มีรายการแข่งขันในจังหวัดนี้</p>
+                  <p style="color: #666; font-size: 0.9rem;">คลิกที่จังหวัดอื่นเพื่อดูรายการแข่งขัน</p>
+                </div>
+              `;
+            }
 
-          modal.classList.add("show");
-          modalOverlay.classList.add("show");
-        });
+            modal.classList.add("show");
+            modalOverlay.classList.add("show");
+          });
+        } else {
+          // For non-province paths, apply neutral styling
+          prov.style.fill = "#f0f0f0";
+          prov.style.stroke = "#ddd";
+          prov.style.strokeWidth = "0.5px";
+          prov.style.pointerEvents = "none";
+        }
       });
     });
   </script>
 </body>
+
 </html>
