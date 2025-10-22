@@ -4,25 +4,15 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>TuemCamp</title>
-  <nav>
-    <div class="logo">
-      <div class="main">Tuem</div>
-      <div class="sub">Camp</div>
-    </div>
-    <div class="nav-links">
-      <ul>
-        <li><a href="#">Home</a></li>
-        <li><a href="#">Region</a></li>
-        <li><a href="#">University</a></li>
-      </ul>
-    </div>
-  </nav>
+  <title>TreumCamp</title>
+
   <style>
+    @import url('https://fonts.googleapis.com/css2?family=Sarabun:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800&display=swap');
+
     body {
       margin: 0;
-      font-family: "Segoe UI", sans-serif;
-      background: #f5f6fa;
+      font-family: "Sarabun", sans-serif;
+      background-color: #F7F8FA;
       overflow: hidden;
       display: flex;
       flex-direction: column;
@@ -49,17 +39,20 @@
     #map-container {
       position: absolute;
       width: 100vw;
-      height: 100vh;
+      height: calc(100vh - 140px);
+      /* ลบความสูงของ nav และ header */
       background: none;
+      filter: drop-shadow(0 0 10px rgba(0, 0, 0, 0.05));
       border: none;
       border-radius: 0;
       box-shadow: none;
       overflow: hidden;
       transition: transform 0.6s ease;
-      top: 0;
+      top: 140px;
+      /* เว้นที่สำหรับ nav และ header */
       left: 0;
       z-index: 1;
-      margin-top: 40px;
+      margin-top: 0;
     }
 
     object {
@@ -190,6 +183,8 @@
       color: #666;
       transition: all 0.3s ease;
       font-weight: bold;
+      padding-left: 5px;
+      padding-bottom: 5px;
     }
 
     .close-btn:hover {
@@ -218,26 +213,121 @@
       margin: 0.5rem 0;
       line-height: 1.6;
     }
-    nav{
+
+    nav {
       display: flex;
       flex-direction: row;
       justify-content: space-between;
       padding: 10px 50px;
-      border: 1px solid black;
+      border-bottom: 1px solid #ddd;
+      background: white;
+      position: relative;
+      z-index: 100;
+      /* ให้ nav อยู่เหนือแผนที่ */
     }
-    .logo{
+
+    .logo {
       display: flex;
       justify-content: center;
       align-items: center;
+      list-style: none;
     }
-    .nav-links ul{
+
+    .nav {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      list-style: none;
+    }
+
+    .nav-links {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 40px;
+    }
+
+    .nav-links a {
+      text-decoration: none;
+      color: #18191F;
+      font-size: 16px;
+      transition: color 0.3s;
+    }
+
+    .nav-links a:hover {
+      color: #4CAF4F;
+    }
+
+    .nav-links ul {
       display: flex;
       gap: 40px;
+    }
+
+    .nav-links li a {
+      text-decoration: none;
+    }
+
+    .nav-buttons {
+      display: flex;
+      gap: 15px;
+      align-items: center;
+    }
+
+    .login-btn {
+      padding: 10px 20px;
+      background: transparent;
+      border: none;
+      color: #4CAF50;
+      font-size: 16px;
+      cursor: pointer;
+      transition: color 0.3s;
+    }
+
+
+
+    .signup-btn {
+      padding: 10px 25px;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    .signup-btn:hover {
+      background-color: #45a049;
+    }
+    .logo{
+      font-size: 34px;
+      font-weight: 600;
+    }
+    .sub{
+      color: #4CAF50;
     }
   </style>
 </head>
 
 <body>
+  <nav>
+    <div class="logo">
+      <div class="main">TREUM</div>
+      <div class="sub">CAMP</div>
+    </div>
+    <div class="nav-links">
+      <ul class="nav">
+        <li><a href="#">Home</a></li>
+        <li><a href="#">Region</a></li>
+        <li><a href="#">University</a></li>
+      </ul>
+      <div class="nav-buttons">
+        <button class="login-btn">Login</button>
+        <button class="signup-btn">Sign up</button>
+      </div>
+    </div>
+
+  </nav>
   <header id="province-name">เลือกจังหวัดบนแผนที่ที่ต้องการทราบการแข่งขัน/ค่าย</header>
   <section>
     <div id="map-container">
@@ -249,7 +339,7 @@
 
     </div>
   </section>
-  
+
   <div id="modal-overlay"></div>
   <div id="competition-modal">
     <div class="modal-header">
@@ -276,12 +366,12 @@
         { name: "Thailand Game Show", date: "20 ธ.ค. 2025", img: "https://picsum.photos/100?2" }
       ],
       "chiang_mai": [
-        { name: "Chiang Mai Flower Festival", date: "25 ธ.ค. 2025", img: "https://picsum.photos/100?3" },
-        { name: "Lanna Cultural Competition", date: "30 ธ.ค. 2025", img: "https://picsum.photos/100?4" }
+        { name: "Chiang Mai Flower Festival", date: "25 ธ.ค. 2025", img: "https://picsum.photos/100?3", tag:"North" },
+        { name: "Lanna Cultural Competition", date: "30 ธ.ค. 2025", img: "https://picsum.photos/100?4", tag:"North" }
       ],
       "chiang_rai": [
-        { name: "Golden Triangle Marathon", date: "5 ม.ค. 2026", img: "https://picsum.photos/100?5" },
-        { name: "White Temple Art Contest", date: "10 ม.ค. 2026", img: "https://picsum.photos/100?6" }
+        { name: "Golden Triangle Marathon", date: "5 ม.ค. 2026", img: "https://picsum.photos/100?5", tag:"North" },
+        { name: "White Temple Art Contest", date: "10 ม.ค. 2026", img: "https://picsum.photos/100?6", tag:"North" }
       ],
       "Phuket": [
         { name: "Phuket Triathlon", date: "15 ม.ค. 2026", img: "https://picsum.photos/100?5" },
@@ -471,6 +561,7 @@
                   <div>
                     <div><strong>${item.name}</strong></div>
                     <div style="color: #666; font-size: 0.9rem;">${item.date}</div>
+                    <div style="color: #666; font-size: 0.9rem;">${item.tag}</div>
                   </div>
                 </div>
               `).join("");
